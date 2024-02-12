@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Entity models
+
+model Book {
+  id        Int     @id @default(autoincrement())
+  title     String  @db.VarChar(100)
+  author    String  @db.VarChar(100)
+  publisher String  @db.VarChar(100)
+  stock     Int
+  status    String  @db.VarChar(10)
+  borrow    Borrow?
+
+  @@map("books")
+}
+
+model Borrower {
+  id       Int     @id @default(autoincrement())
+  fullname String  @db.VarChar(100)
+  email    String  @db.VarChar(100)
+  phone    String  @db.VarChar(100)
+  borrow   Borrow?
+
+  @@map("borrowers")
+}
+
+model Borrow {
+  id          Int      @id @default(autoincrement())
+  book_id     Int      @unique
+  borrower_id Int      @unique
+  borrow_date DateTime @db.Timestamp()
+  return_date DateTime @db.Timestamp()
+  status      String   @db.VarChar(10)
+  book        Book     @relation(fields: [borrower_id], references: [id])
+  borrower    Borrower @relation(fields: [book_id], references: [id])
+
+  @@map("borrows")
+}
