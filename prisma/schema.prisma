@@ -41,8 +41,8 @@ model Borrow {
   borrow_date DateTime @db.Timestamp()
   return_date DateTime @db.Timestamp()
   status      String   @db.VarChar(10)
-  book        Book     @relation(fields: [borrower_id], references: [id])
-  borrower    Borrower @relation(fields: [book_id], references: [id])
+  book        Book     @relation(fields: [book_id], references: [id])
+  borrower    Borrower @relation(fields: [borrower_id], references: [id])
 
   @@map("borrows")
 }
