@@ -3,7 +3,7 @@ import { ResponseError } from "../errors/error.js";
 
 
 const list = async () => {
-    const books = await prismaClient.book.findMany({
+    return prismaClient.book.findMany({
         select: {
             id: true,
             title: true,
@@ -13,12 +13,6 @@ const list = async () => {
             status: true
         }
     });
-
-    if (!books) {
-        throw new ResponseError(404, 'No books data available');
-    }
-
-    return books;
 };
 
 export default {

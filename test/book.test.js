@@ -13,11 +13,12 @@ describe('GET /api/books', () => {
         await deleteManyTestBook();
     });
 
-
-    test('should retrieve books data', async () => {
+    test('should retrieve books data with the correct format', async () => {
         const result = await supertest(web)
             .get('/api/books');
 
-        logger.warn(JSON.parse(result.text));
+        expect(result.status).toBe(200);
+        expect(result.body.data).toBeDefined();
+        expect(result.body.data).toBeInstanceOf(Array);
     });
 });
