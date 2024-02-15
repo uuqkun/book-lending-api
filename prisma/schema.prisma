@@ -29,6 +29,8 @@ model User {
   fullname String  @db.VarChar(100)
   email    String? @unique @db.VarChar(100)
   phone    String? @db.VarChar(100)
+  role     String  @db.VarChar(10)
+  token    String? @db.VarChar(100)
   borrow   Borrow?
 
   @@map("users")
