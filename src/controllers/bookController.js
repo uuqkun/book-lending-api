@@ -26,7 +26,23 @@ const create = async (req, res, next) => {
     }
 }
 
+const update = async (req, res, next) => {
+    try {
+        const request = req.body;
+        const bookId = req.params.bookId;
+
+        const result = await bookService.update(request,bookId);
+
+        res.status(200).json({
+            data: result
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
 export default {
+    update,
     create,
     list
 }

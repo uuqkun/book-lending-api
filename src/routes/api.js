@@ -7,7 +7,7 @@ adminRouter.use(authMiddleware);
 
 // Book API
 adminRouter.post('/api/books', bookController.create);
-
+adminRouter.patch('/api/books/:bookId', bookController.update);
 
 export {
     adminRouter

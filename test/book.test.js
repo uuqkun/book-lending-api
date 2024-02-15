@@ -1,7 +1,7 @@
 import supertest from "supertest";
 import { web } from "../src/application/web.js";
 import { logger } from "../src/application/logging.js";
-import { createManyTestBook, createTestAdmin, deleteManyTestBook, deleteTestAdmin } from "./test-util.js";
+import { createManyTestBook, createTestAdmin, deleteManyTestBook, deleteTestAdmin, getBookId } from "./test-util.js";
 
 
 describe('list books data | GET /api/books', () => {
@@ -24,7 +24,7 @@ describe('list books data | GET /api/books', () => {
 
     test('should response 404 if no data found', async () => {
         await deleteManyTestBook();
-        
+
         const result = await supertest(web)
             .get('/api/books');
 
@@ -97,7 +97,74 @@ describe('insert new book | POST /api/books', () => {
         expect(result.status).toBe(400);
         expect(result.error).toBeDefined();
     });
+});
 
+describe('Update book | PATCH /api/books/:bookId', () => {
+    beforeEach(async () => {
+        await createTestAdmin();
+        await createManyTestBook();
+    });
 
+    afterEach(async () => {
+        await deleteManyTestBook();
+        await deleteTestAdmin();
+    });
+
+    test('should update a single book data', async () => {
+        const book = await getBookId();
+
+        const result = await supertest(web)
+            .patch(`/api/books/${book.id}`)
+            .set('Authorization', 'admin')
+            .send({
+                title: 'Updated Title',
+                status: 'Borrowed'
+            });
+
+        expect(result.status).toBe(200);
+        expect(result.body.data).not.toBeNull();
+        expect(result.body.data).not.toBeUndefined();
+    });
+
+    test('should response 404 if no book found', async () => {
+        const book = await getBookId();
+
+        const result = await supertest(web)
+            .patch(`/api/books/${(book.id * 2)}`)
+            .set('Authorization', 'admin')
+            .send({
+                title: 'Updated Title',
+                status: 'Borrowed'
+            });
+
+        expect(result.status).toBe(404);
+        expect(result.error).toBeDefined();
+    });
+
+    test('should response 401 if unauthorized admin', async () => {
+        const book = await getBookId();
+
+        const result = await supertest(web)
+            .patch(`/api/books/${book.id}`)
+            .set('Authorization', '')
+            .send({
+                title: 'Updated Title',
+                status: 'Borrowed'
+            });
+
+        expect(result.status).toBe(401);
+        expect(result.error).toBeDefined();
+    });
+
+    test('should response 400 if there`s empty mandatory field', async () => {
+        const book = await getBookId();
+
+        const result = await supertest(web)
+            .patch(`/api/books/${book.id}`)
+            .set('Authorization', 'admin');
+
+        expect(result.status).toBe(400);
+        expect(result.error).toBeDefined();
+    });
 });
 

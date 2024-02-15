@@ -42,3 +42,19 @@ export const createManyTestBook = async () => {
 export const deleteManyTestBook = async () => {
     return prismaClient.book.deleteMany();
 }
+
+export const getBookId = async () => {
+    return prismaClient.book.findFirst({
+        where: {
+            title: "Test Book"
+        },
+        select: {
+            id: true,
+            title: true,
+            author: true,
+            publisher: true,
+            stock: true,
+            status: true
+        }
+    })
+}
