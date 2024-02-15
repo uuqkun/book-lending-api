@@ -1,5 +1,20 @@
 import { prismaClient } from "../src/application/database.js"
 
+export const createTestAdmin = async () => {
+    return prismaClient.user.create({
+        data: {
+            fullname: 'admin 1',
+            email: 'admin@gmail.com',
+            phone: '08882282',
+            role: 'admin',
+            token: 'admin'
+        }
+    });
+}
+
+export const deleteTestAdmin = async () => {
+    return prismaClient.user.deleteMany();
+}
 
 export const createManyTestBook = async () => {
     const books = [
@@ -23,6 +38,7 @@ export const createManyTestBook = async () => {
         data: books
     });
 }
-export const deleteManyTestBook = async () => { 
+
+export const deleteManyTestBook = async () => {
     return prismaClient.book.deleteMany();
 }
