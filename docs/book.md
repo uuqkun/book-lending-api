@@ -102,7 +102,7 @@
 
 ## Delete book
 #### Endpoint
-`PATCH` /api/books/:bookId
+`DELETE` /api/books/:bookId
 
 #### Headers
 - Auth: `token`

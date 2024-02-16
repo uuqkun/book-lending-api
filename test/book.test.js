@@ -1,7 +1,7 @@
 import supertest from "supertest";
 import { web } from "../src/application/web.js";
 import { logger } from "../src/application/logging.js";
-import { createManyTestBook, createTestAdmin, deleteManyTestBook, deleteTestAdmin, getBookId } from "./test-util.js";
+import { createManyTestBook, createTestAdmin, createTestBook, deleteManyTestBook, deleteTestAdmin, getBookId } from "./test-util.js";
 
 
 describe('list books data | GET /api/books', () => {
@@ -167,4 +167,53 @@ describe('Update book | PATCH /api/books/:bookId', () => {
         expect(result.error).toBeDefined();
     });
 });
+
+describe('Delete book record | DELETE /api/books/:bookId', () => {
+    beforeEach(async () => {
+        await createTestAdmin();
+        await createTestBook();
+    });
+
+    afterEach(async () => {
+        await deleteManyTestBook();
+        await deleteTestAdmin();
+    });
+
+    test('should remove a single book data', async () => {
+        const book = await getBookId();
+
+        const result = await supertest(web)
+            .delete(`/api/books/${book.id}`)
+            .set('Authorization', 'admin');
+
+        expect(result.status).toBe(200);
+        expect(result.body.data).toBe("OK");
+        expect(result.body.data).not.toBeUndefined();
+    });
+
+    test('should response 404 if no book record found', async () => {
+        const book = await getBookId();
+
+        const result = await supertest(web)
+            .delete(`/api/books/${(book.id * 2)}`)
+            .set('Authorization', 'admin');
+
+        logger.warn(result);
+        expect(result.status).toBe(404);
+        expect(result.error).toBeDefined();
+    });
+
+    test('should response 401 if unauthorized admin', async () => {
+        const book = await getBookId();
+
+        const result = await supertest(web)
+            .delete(`/api/books/${book.id}`)
+            .set('Authorization', '');
+
+        expect(result.status).toBe(401);
+        expect(result.error).toBeDefined();
+    });
+});
+
+
 

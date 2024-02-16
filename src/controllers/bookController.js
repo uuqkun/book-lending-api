@@ -41,7 +41,21 @@ const update = async (req, res, next) => {
     }
 }
 
+const remove = async(req, res, next) => {
+    try {
+        const bookId = req.params.bookId;
+        await bookService.remove(bookId);
+
+        res.status(200).json({
+            data: "OK"
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
 export default {
+    remove,
     update,
     create,
     list

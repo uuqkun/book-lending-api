@@ -74,7 +74,31 @@ const update = async (request, bookId) => {
     });
 }
 
+const remove = async (bookId) => {
+    bookId = validate(getBookIdValidation, bookId);
+    console.info(bookId)
+
+    const book = await prismaClient.book.findFirst({
+        where: {
+            id: bookId
+        }
+    })
+
+    console.info(book)
+
+    if (!book) {
+        throw new ResponseError(404, 'No data found, cannot proceed deletion');
+    }
+
+    return prismaClient.book.delete({
+        where: {
+            id: bookId
+        }
+    })
+}
+
 export default {
+    remove,
     update,
     create,
     list

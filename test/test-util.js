@@ -16,6 +16,20 @@ export const deleteTestAdmin = async () => {
     return prismaClient.user.deleteMany();
 }
 
+export const createTestBook = async () => {
+    const book = {
+        title: "Test Book",
+        author: "Test Author",
+        publisher: "Test Publisher",
+        stock: 10,
+        status: "Available"
+    }
+
+    return prismaClient.book.create({
+        data: book
+    })
+}
+
 export const createManyTestBook = async () => {
     const books = [
         {
