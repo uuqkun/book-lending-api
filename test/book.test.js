@@ -1,7 +1,7 @@
 import supertest from "supertest";
 import { web } from "../src/application/web.js";
 import { logger } from "../src/application/logging.js";
-import { createManyTestBook, createTestAdmin, createTestBook, deleteManyTestBook, deleteTestAdmin, getBookId } from "./test-util.js";
+import { createManyTestBook, createTestUser, createTestBook, deleteManyTestBook, deleteTestUser, getBookId } from "./test-util.js";
 
 
 describe('list books data | GET /api/books', () => {
@@ -36,12 +36,12 @@ describe('list books data | GET /api/books', () => {
 describe('insert new book | POST /api/books', () => {
 
     beforeEach(async () => {
-        await createTestAdmin();
+        await createTestUser();
     });
 
     afterEach(async () => {
         await deleteManyTestBook();
-        await deleteTestAdmin();
+        await deleteTestUser();
     });
 
     test('should insert new book data', async () => {
@@ -101,13 +101,13 @@ describe('insert new book | POST /api/books', () => {
 
 describe('Update book | PATCH /api/books/:bookId', () => {
     beforeEach(async () => {
-        await createTestAdmin();
+        await createTestUser();
         await createManyTestBook();
     });
 
     afterEach(async () => {
         await deleteManyTestBook();
-        await deleteTestAdmin();
+        await deleteTestUser();
     });
 
     test('should update a single book data', async () => {
@@ -170,13 +170,13 @@ describe('Update book | PATCH /api/books/:bookId', () => {
 
 describe('Delete book record | DELETE /api/books/:bookId', () => {
     beforeEach(async () => {
-        await createTestAdmin();
+        await createTestUser();
         await createTestBook();
     });
 
     afterEach(async () => {
         await deleteManyTestBook();
-        await deleteTestAdmin();
+        await deleteTestUser();
     });
 
     test('should remove a single book data', async () => {
